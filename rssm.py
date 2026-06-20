@@ -1,11 +1,12 @@
 import torch.nn as nn
+import torch
 
 class Encoder(nn.Module):
     def __init__(self, embed_dim):
         super().__init__()
-        self.in_channels = 3                #3 if RGB, 1 if grayscale
-        self.kernel_size = 4                #this and stride are just by default
-        self.stride = 2                     
+        self.in_channels = 3                #3 if RGB, 1 if grayscale TODO:un-hardcode
+        self.kernel_size = 4                #this and stride are just by default TODO:un-hardcode
+        self.stride = 2                     #TODO:un-hardcode
         self.embed_dim = embed_dim  
 
         self.convs = nn.Sequential(
@@ -42,6 +43,7 @@ class Posterior(nn.Module):
         )
         
 
-    def forward(self, x, h):
-        z = self.convs(x, h)
+    def forward(self, e, h):
+        z = torch.cat((e, h), dim=-1)
+        z = self.mlp(z)
         return z
