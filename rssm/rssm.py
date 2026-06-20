@@ -85,4 +85,4 @@ class RSSM(nn.Module):
         return
 
     def imagination_step(self, h, z, a):
-        return
+        return z
