@@ -25,7 +25,7 @@ class Posterior(nn.Module):
             nn.Linear(self.total_dim, self.hidden_dim),
             nn.LayerNorm(self.hidden_dim),
             nn.SiLU(),
-            nn.Linear(self.hidden_dim, self.stoch_dim)
+            nn.Linear(self.hidden_dim, self.discrete_dim)
         )
         
 
@@ -48,7 +48,7 @@ class Prior(nn.Module):
             nn.Linear(self.deter_dim, self.hidden_dim),
             nn.LayerNorm(self.hidden_dim),
             nn.SiLU(),
-            nn.Linear(self.hidden_dim, self.stoch_dim)
+            nn.Linear(self.hidden_dim, self.discrete_dim)
         )
 
     def forward(self, h):
@@ -77,8 +77,8 @@ class RSSM(nn.Module):
     def __init__(self, embed_dim, hidden_dim, deter_dim, discrete_dim, action_dim):
         super().__init__()
         self.sequence        = SequenceModel(action_dim, deter_dim, discrete_dim, hidden_dim)
-        self.dynamics        = Prior(deter_dim)
-        self.representation  = Posterior(embed_dim, deter_dim)
+        self.dynamics        = Prior(deter_dim, discrete_dim, hidden_dim)
+        self.representation  = Posterior(embed_dim, deter_dim, discrete_dim, hidden_dim)
 
         self.encoder         = Encoder(embed_dim)
         self.decoder         = Decoder(deter_dim, discrete_dim)
@@ -95,7 +95,7 @@ class RSSM(nn.Module):
 
     def observation_step(self, h, z, a, e):
         h_new = self.sequence(h, z, a)
-        z_new = self.representation(e, h)
+        z_new = self.representation(e, h_new)
         return h_new, z_new
 
     def imagination_step(self, h, z, a):
