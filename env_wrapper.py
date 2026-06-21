@@ -18,7 +18,7 @@ class CarRacingWrapper(gym.Wrapper):
         t = F.interpolate(t, size=(self.size, self.size), mode="bilinear", align_corners=False)
         return t.squeeze(0)  # (3, 64, 64)
 
-    def reset(self, **kwargs):
+    def reset(self, **kwargs): #resets entire env
         obs, info = self.env.reset(**kwargs)
         return self._preprocess(obs), info
 

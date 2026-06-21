@@ -19,7 +19,7 @@ ACTION_DIM  = 3   # CarRacing-v2: [steering, gas, brake]
 SEQ_LEN    = 50   # consecutive real frames per training sequence (not imagination depth)
 BATCH_SIZE = 16
 LR         = 1e-4
-TRAIN_STEPS = 2000
+TRAIN_STEPS = 200
 
 # --- Data collection ---
 INIT_EPISODES   = 10   # random episodes before training starts
@@ -92,6 +92,7 @@ for step in range(TRAIN_STEPS):
     if step % COLLECT_EVERY == 0:
         collect_episode()
 
+    #saves checkpoints, not necessarily useful
     if step % 500 == 0 and step > 0:
         torch.save(model.state_dict(), f"checkpoint_{step}.pt")
         print(f"  Saved checkpoint_{step}.pt")

@@ -99,7 +99,7 @@ class RSSM(nn.Module):
 
     def imagination_step(self, h, z, a):
         h_new = self.sequence(h, z, a)
-        z_new = self.dynamics(h)
+        z_new = self.dynamics(h_new)
         return h_new, z_new
     
     def decode(self, h, z):

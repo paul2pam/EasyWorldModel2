@@ -31,10 +31,13 @@ class ReplayBuffer:
         # This is NOT imagination depth — the model trains on real obs the whole time.
         # Longer = better temporal credit assignment, but more memory. ~50 is typical.
         obs_batch, act_batch = [], []
+        valid = [ep for ep in self.episodes if len(ep["obs"]) >= seq_len]
+        if not valid:
+            raise RuntimeError(f"No episodes long enough to sample seq_len={seq_len}. Collect more data first.")
         for _ in range(batch_size):
-            ep = self.episodes[np.random.randint(len(self.episodes))]
+            ep = valid[np.random.randint(len(valid))]
             T = len(ep["obs"])
-            start = np.random.randint(0, max(1, T - seq_len))
+            start = np.random.randint(0, T - seq_len + 1)
             obs_batch.append(ep["obs"][start:start + seq_len])
             act_batch.append(ep["actions"][start:start + seq_len])
         return np.stack(obs_batch), np.stack(act_batch)  # (B, T, ...) each
