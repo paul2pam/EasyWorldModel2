@@ -17,7 +17,6 @@ class Posterior(nn.Module):
         self.embed_dim = embed_dim  
         self.deter_dim = deter_dim
         self.total_dim = embed_dim + deter_dim
-
         self.discrete_dim = discrete_dim 
         self.hidden_dim = hidden_dim              
 
