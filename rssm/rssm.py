@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.nn.functional as F
 import torch
 
 from encoder import Encoder
@@ -94,13 +95,20 @@ class RSSM(nn.Module):
 
     def observation_step(self, h, z, a, e):
         h_new = self.sequence(h, z, a)
-        z_new = self.representation(e, h_new)
-        return h_new, z_new
+        post_logits = self.representation(e, h_new)  # posterior: uses real obs
+        prior_logits = self.dynamics(h_new)           # prior: no obs
+        z_new = F.softmax(post_logits, dim=-1)
+        return h_new, z_new, prior_logits, post_logits
 
     def imagination_step(self, h, z, a):
         h_new = self.sequence(h, z, a)
         z_new = self.dynamics(h_new)
         return h_new, z_new
     
+    def kl_loss(self, prior_logits, post_logits):
+        p = F.softmax(post_logits, dim=-1)
+        q = F.softmax(prior_logits, dim=-1)
+        return (p * (p.log() - q.log())).sum(-1).mean()
+
     def decode(self, h, z):
         return self.decoder(h, z)

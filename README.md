@@ -1,6 +1,5 @@
 # EasyWorldModel
-A dreaming world model bassed off [DreamerV3](https://arxiv.org/abs/2301.04104). 
-Stripped of everything except the basic fucntional code. So simple your grandma could use it. 
+A minimal, readable implementation of [DreamerV3](https://arxiv.org/abs/2301.04104).
 
 ## Setup
 ```bash
@@ -13,8 +12,6 @@ pip install -r requirements.txt
 ```bash
 python train.py    # collect CarRacing-v2 data and train the world model
 python render.py   # load checkpoint and save a 100-frame imagination rollout to imagination.gif
-
-#that's it!!
 ```
 
 ## Architecture
