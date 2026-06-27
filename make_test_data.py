@@ -4,7 +4,7 @@ import h5py
 
 OUT = "test_data.hdf5"
 NUM_DEMOS = 3
-T = 20  # timesteps per demo
+T = 100  # timesteps per demo
 H, W, C = 84, 84, 3
 ACTION_DIM = 7
 
