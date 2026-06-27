@@ -8,7 +8,7 @@ from rssm import RSSM
 from dataset import SequenceDataset
 
 # --- Data ---
-HDF5_PATH = "test_data.hdf5"
+HDF5_PATH = "demo.hdf5"
 
 # --- Dims ---
 EMBED_DIM    = 512
@@ -23,7 +23,7 @@ BATCH_SIZE = 16
 LR         = 1e-4
 KL_WEIGHT  = 0.1
 FREE_BITS  = 1.0  # minimum KL per step — prevents posterior collapse
-TRAIN_STEPS = 500
+TRAIN_STEPS = 100
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")

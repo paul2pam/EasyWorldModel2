@@ -41,7 +41,7 @@ class SequenceDataset(Dataset):
         demo = self.f[f'data/{key}']
 
         # (L, 84, 84, 3) uint8 → (L, 3, 84, 84) float [0,1] → (L, 3, 64, 64)
-        imgs = demo['obs/robot0_eye_in_hand_image'][start:end]  # (L, H, W, 3)
+        imgs = demo['obs/image_wrist'][start:end]  # (L, H, W, 3)
         imgs = torch.from_numpy(imgs).permute(0, 3, 1, 2).float() / 255.0
         imgs = F.interpolate(imgs, size=(64, 64), mode='bilinear', align_corners=False)
 
