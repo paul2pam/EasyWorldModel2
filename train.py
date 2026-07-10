@@ -8,7 +8,7 @@ from rssm import RSSM
 from dataset import SequenceDataset
 
 # --- Data ---
-HDF5_PATH = "demo.hdf5"
+HDF5_PATH = "can_ph_image.hdf5"
 
 # --- Dims ---
 EMBED_DIM    = 512
