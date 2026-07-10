@@ -14,7 +14,7 @@ HDF5_PATH = "demo.hdf5"
 EMBED_DIM    = 512
 HIDDEN_DIM   = 512
 DETER_DIM    = 512
-DISCRETE_DIM = 512
+DISCRETE_DIM = 1024  # 32 categoricals x 32 classes
 ACTION_DIM   = 7   # robomimic Lift: [3 pos + 3 rot + 1 gripper]
 
 # --- Training ---
