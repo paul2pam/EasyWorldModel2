@@ -12,6 +12,7 @@ build/
 
 # ML artifacts
 checkpoints/
+demos/
 runs/
 wandb/
 *.pt
@@ -38,3 +39,5 @@ Thumbs.db
 
 # Env vars
 .env
+
+robomimic_image.zip
