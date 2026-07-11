@@ -73,7 +73,8 @@ def main():
 
     # ── Load model ──────────────────────────────────────────────────────────
     model = RSSM(EMBED_DIM, HIDDEN_DIM, DETER_DIM, DISCRETE_DIM, ACTION_DIM).to(device)
-    model.load_state_dict(torch.load(args.checkpoint, map_location=device))
+    ckpt = torch.load(args.checkpoint, map_location=device)
+    model.load_state_dict(ckpt['model'] if 'model' in ckpt else ckpt)
     model.eval()
     print(f"Loaded checkpoint: {args.checkpoint}")
 
@@ -95,8 +96,7 @@ def main():
         # ── Imagination: autoregressive rollout conditioned on real actions ──
         imagined = []
         for t in range(args.burn_in, args.burn_in + args.horizon):
-            h, z_logits = model.imagination_step(h, z, acts[t].unsqueeze(0))
-            z = F.softmax(z_logits, dim=-1)          # normalize before decode + next step
+            h, z = model.imagination_step(h, z, acts[t].unsqueeze(0))
             frame = model.decode(h, z).squeeze(0)    # (3, 64, 64)
             imagined.append(frame.clamp(0, 1))
 

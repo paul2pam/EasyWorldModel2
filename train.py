@@ -18,18 +18,25 @@ DISCRETE_DIM = 1024  # 32 categoricals x 32 classes
 ACTION_DIM   = 7   # robomimic Lift: [3 pos + 3 rot + 1 gripper]
 
 # --- Training ---
-SEQ_LEN    = 50   # consecutive frames per training sequence
-BATCH_SIZE = 16
-LR         = 1e-4
-KL_WEIGHT  = 0.1
-FREE_BITS  = 1.0  # minimum KL per step — prevents posterior collapse
+SEQ_LEN     = 50   # consecutive frames per training sequence
+BATCH_SIZE  = 16
+LR          = 1e-4
+KL_WEIGHT   = 0.1
+FREE_BITS   = 1.0  # minimum KL per step — prevents posterior collapse
 TRAIN_STEPS = 100
+RESUME_FROM = None  # set to a checkpoint path to continue training
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 model     = RSSM(EMBED_DIM, HIDDEN_DIM, DETER_DIM, DISCRETE_DIM, ACTION_DIM).to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+
+if RESUME_FROM:
+    ckpt = torch.load(RESUME_FROM, map_location=device)
+    model.load_state_dict(ckpt['model'])
+    optimizer.load_state_dict(ckpt['optimizer'])
+    print(f"Resumed from {RESUME_FROM}")
 
 dataset     = SequenceDataset(HDF5_PATH, seq_len=SEQ_LEN)
 loader      = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0, drop_last=True)
@@ -81,9 +88,9 @@ for step in range(TRAIN_STEPS):
         print(f"Step {step:4d} | recon: {recon_loss:.5f} | kl: {kl:.5f}")
 
     if step % 500 == 0 and step > 0:
-        torch.save(model.state_dict(), f"checkpoint_{step}.pt")
+        torch.save({'model': model.state_dict(), 'optimizer': optimizer.state_dict()}, f"checkpoint_{step}.pt")
         print(f"  Saved checkpoint_{step}.pt")
 
-torch.save(model.state_dict(), "checkpoint.pt")
+torch.save({'model': model.state_dict(), 'optimizer': optimizer.state_dict()}, "checkpoint.pt")
 print("Saved checkpoint.pt")
 print("Done.")
