@@ -52,7 +52,7 @@ def load_demo(hdf5_path: str, demo_key: str, device: torch.device):
     """
     with h5py.File(hdf5_path, "r") as f:
         demo = f[f"data/{demo_key}"]
-        imgs_np = demo["obs/image_wrist"][:]  # (T, 120, 120, 3) uint8
+        imgs_np = demo["obs/image"][:]  # (T, 120, 120, 3) uint8
         acts_np = demo["actions"][:].astype("float32")     # (T, 7)
 
     imgs = torch.from_numpy(imgs_np).permute(0, 3, 1, 2).float() / 255.0
