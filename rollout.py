@@ -25,7 +25,7 @@ from rssm import RSSM
 EMBED_DIM    = 512
 HIDDEN_DIM   = 512
 DETER_DIM    = 512
-DISCRETE_DIM = 512
+DISCRETE_DIM = 1024  # 32 categoricals x 32 classes
 ACTION_DIM   = 7
 
 
