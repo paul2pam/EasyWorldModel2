@@ -6,7 +6,7 @@ The world model learns to imagine future wrist-cam frames from a 7-DOF robot arm
 
 ## Rollouts
 
-Ground truth (left) vs. model imagination (right) after 20k training steps:
+Ground truth (left) vs. model imagination (right) after 100k training steps:
 
 **Latest rollout**
 ![rollout](rollout_preview.gif)
