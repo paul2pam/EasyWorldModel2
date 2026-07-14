@@ -33,6 +33,19 @@ data/
 .idea/
 CLAUDE.md
 
+# Scratch / one-off scripts
+make_test_data.py
+test.py
+render.py
+env_wrapper.py
+replay_buffer.py
+rollout_preview.gif
+
+# Generated outputs
+*.mp4
+mse_plot*.png
+rollout_[0-9]*.gif
+
 # OS
 .DS_Store
 Thumbs.db
