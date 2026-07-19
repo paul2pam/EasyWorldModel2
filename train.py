@@ -34,8 +34,12 @@ optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
 if RESUME_FROM:
     ckpt = torch.load(RESUME_FROM, map_location=device)
-    model.load_state_dict(ckpt['model'])
-    optimizer.load_state_dict(ckpt['optimizer'])
+    state_dict = ckpt['model'] if 'model' in ckpt else ckpt
+    # strip decoder weights — architecture changed, let it retrain from scratch
+    state_dict = {k: v for k, v in state_dict.items() if not k.startswith('decoder.')}
+    missing, unexpected = model.load_state_dict(state_dict, strict=False)
+    print(f"  Transferred {len(state_dict)} weights, decoder retrains from scratch")
+    optimizer.load_state_dict(ckpt['optimizer']) if 'optimizer' in ckpt else None
     print(f"Resumed from {RESUME_FROM}")
 
 dataset     = SequenceDataset(HDF5_PATH, seq_len=SEQ_LEN)

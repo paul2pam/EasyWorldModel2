@@ -11,13 +11,17 @@ class Decoder(nn.Module):
             nn.Linear(in_features=self.total_dim, out_features=4096),
             nn.Unflatten(-1, (256, 4, 4)),
             nn.SiLU(),
-            nn.ConvTranspose2d(256, 128, kernel_size=4, stride=self.stride, padding=1),
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(256, 128, kernel_size=3, padding=1),
             nn.SiLU(),
-            nn.ConvTranspose2d(128, 64, 4, stride=self.stride, padding=1),
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(128, 64, kernel_size=3, padding=1),
             nn.SiLU(),
-            nn.ConvTranspose2d(64, 32, 4, stride=self.stride, padding=1),
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(64, 32, kernel_size=3, padding=1),
             nn.SiLU(),
-            nn.ConvTranspose2d(32, out_channels, 4, stride=self.stride, padding=1)
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(32, out_channels, kernel_size=3, padding=1),
         )
 
     def forward(self, h, z):
