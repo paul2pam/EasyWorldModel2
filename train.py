@@ -39,7 +39,8 @@ if RESUME_FROM:
     state_dict = {k: v for k, v in state_dict.items() if not k.startswith('decoder.')}
     missing, unexpected = model.load_state_dict(state_dict, strict=False)
     print(f"  Transferred {len(state_dict)} weights, decoder retrains from scratch")
-    optimizer.load_state_dict(ckpt['optimizer']) if 'optimizer' in ckpt else None
+    if 'optimizer' in ckpt:
+        optimizer.load_state_dict(ckpt['optimizer'])
     print(f"Resumed from {RESUME_FROM}")
 
 dataset     = SequenceDataset(HDF5_PATH, seq_len=SEQ_LEN)
